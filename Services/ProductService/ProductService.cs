@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPIWithPostgreSQL.Db;
 using WebAPIWithPostgreSQL.Interface;
 using WebAPIWithPostgreSQL.Models;
 
@@ -9,29 +10,45 @@ namespace WebAPIWithPostgreSQL.Services.ProductService
 {
     public class ProductService : IProductModel
     {
+        private readonly ProductDbContext _dbContext;
+
+        public ProductService(ProductDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         public ProductModel CreateProduct(ProductModel productModel)
         {
-            throw new NotImplementedException();
+            _dbContext.ProductModels.Add(productModel);
+            _dbContext.SaveChanges();
+            return productModel;
         }
-
-        public ProductModel DeleteProduct(int productId)
+        public void DeleteProduct(Guid id)
         {
-            throw new NotImplementedException();
+            var prd = _dbContext.ProductModels.Where(x => x.ProductId == id).FirstOrDefault();
+            if(prd != null)
+            {
+                _dbContext.ProductModels.Attach(prd);
+                _dbContext.ProductModels.Remove(prd);
+                _dbContext.SaveChanges();
+            }
         }
-
-        public ProductModel GetProduct()
+        public ProductModel GetProduct(Guid id)
         {
-            throw new NotImplementedException();
+            return _dbContext.ProductModels.Where(x => x.ProductId == id).FirstOrDefault();
         }
-
         public List<ProductModel> GetProducts()
         {
-            throw new NotImplementedException();
+            return _dbContext.ProductModels.ToList();
         }
-
         public ProductModel UpdateProduct(ProductModel productModel)
         {
-            throw new NotImplementedException();
+            var prd = _dbContext.ProductModels.Where(x => x.ProductId == productModel.ProductId).FirstOrDefault();
+            if (prd != null)
+            {
+                _dbContext.ProductModels.Update(prd);
+                _dbContext.SaveChanges();
+            }
+            return productModel;
         }
     }
 }

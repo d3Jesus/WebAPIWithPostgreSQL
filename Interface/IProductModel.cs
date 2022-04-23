@@ -10,12 +10,12 @@ namespace WebAPIWithPostgreSQL.Interface
     {
         List<ProductModel> GetProducts();
 
-        ProductModel GetProduct();
+        ProductModel GetProduct(Guid id);
 
         ProductModel CreateProduct(ProductModel productModel);
 
         ProductModel UpdateProduct(ProductModel productModel);
 
-        ProductModel DeleteProduct(int productId);
+        void DeleteProduct(Guid id);
     }
 }
