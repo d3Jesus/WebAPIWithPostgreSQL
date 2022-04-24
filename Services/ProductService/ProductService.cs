@@ -45,7 +45,7 @@ namespace WebAPIWithPostgreSQL.Services.ProductService
             var prd = _dbContext.ProductModels.Where(x => x.ProductId == productModel.ProductId).FirstOrDefault();
             if (prd != null)
             {
-                _dbContext.ProductModels.Update(prd);
+                prd.ProductName = productModel.ProductName;
                 _dbContext.SaveChanges();
             }
             return productModel;
